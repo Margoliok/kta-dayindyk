@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>КТА дайындық — Магистратура</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="#/" class="brand">
+        <span class="brand-mark">КТА</span>
+        <span class="brand-text">Магистратураға дайындық</span>
+      </a>
+      <nav class="topnav">
+        <a href="#/" data-nav="home">Басты бет</a>
+        <a href="#/kta" data-nav="kta">КТА сынама</a>
+        <a href="#/search" data-nav="search">Іздеу</a>
+      </nav>
+      <button id="themeToggle" class="theme-toggle" title="Тақырып түсі" aria-label="Тема">🌙</button>
+    </div>
+  </header>
+
+  <main id="app" class="app"></main>
+
+  <footer class="footer">
+    <div>Оқу материалдары: Педагогика (2018), Отбасы педагогикасы (2014), Қазақ тілін оқыту әдістемесі (2016), Әдістеме (2005), Тілдік қатынас (2000).</div>
+    <div class="footer-muted">Жеке дайындыққа арналған офлайн платформа · Прогресс браузерде сақталады.</div>
+  </footer>
+
+  <!-- Деректер (fetch емес, file:// үшін script арқылы жүктеледі) -->
+  <script src="data/pedagogika.js"></script>
+  <script src="data/adisteme.js"></script>
+  <script src="data/tests_pedagogika.js"></script>
+  <script src="data/tests_authored.js"></script>
+  <!-- Қосымша -->
+  <script src="js/quiz.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
