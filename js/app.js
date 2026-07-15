@@ -33,6 +33,22 @@
   }
   function questionCount(sid) { return testsFor(sid).length; }
   function topicCount(sid) { return (DATA[sid] && DATA[sid].topics.length) || 0; }
+  // Емтихан сұрақтарының саны: спецификация бойынша (әр тақырыптан N) немесе әдепкі 30
+  function examSize(sid) {
+    const s = DATA[sid];
+    if (s && s.examPerTopic) return s.examPerTopic * s.topics.length;
+    return Math.min(30, questionCount(sid));
+  }
+  // Спецификация форматында сұрақ жиынын құру (әр тақырыптан N кездейсоқ)
+  function buildSpecExam(sid) {
+    const s = DATA[sid];
+    let picked = [];
+    s.topics.forEach(function (t) {
+      const qs = testsForTopic(sid, t.id);
+      picked = picked.concat(window.quizShuffle(qs).slice(0, s.examPerTopic));
+    });
+    return window.quizShuffle(picked);
+  }
 
   /* ---------- навигация ---------- */
   function setActiveNav() {
@@ -112,7 +128,11 @@
     html += '<p class="lead">' + esc(s.subtitle || '') + '</p>';
     if (s.sources) html += '<p class="muted" style="font-size:13px">Дереккөздер: ' + s.sources.map(esc).join(' · ') + '</p>';
     html += '<div class="btn-row">';
-    if (questionCount(sid) > 0) html += '<a class="btn" href="#/exam/' + sid + '">Пән бойынша емтихан (' + Math.min(30, questionCount(sid)) + ' сұрақ)</a>';
+    if (questionCount(sid) > 0) {
+      const es = examSize(sid);
+      const label = s.examPerTopic ? ('КТА форматы: емтихан (' + es + ' сұрақ)') : ('Пән бойынша емтихан (' + es + ' сұрақ)');
+      html += '<a class="btn" href="#/exam/' + sid + '">' + label + '</a>';
+    }
     html += '</div></div>';
 
     html += '<div class="section-title">Тақырыптар</div>';
@@ -185,11 +205,11 @@
     if (!s) return notFound();
     let pool = testsFor(sid);
     if (!pool.length) { app.innerHTML = '<div class="empty">Тест жоқ.</div>'; return; }
-    const n = Math.min(30, pool.length);
-    const picked = window.quizShuffle(pool).slice(0, n);
+    const picked = s.examPerTopic ? buildSpecExam(sid) : window.quizShuffle(pool).slice(0, Math.min(30, pool.length));
+    const n = picked.length;
     const q = new Quiz(app, {
       title: s.title + ' — емтихан',
-      subtitle: n + ' сұрақ · таймер ' + n + ' мин',
+      subtitle: (s.examPerTopic ? ('КТА форматы · әр тақырыптан ' + s.examPerTopic + ' · ') : '') + n + ' сұрақ · таймер ' + n + ' мин',
       questions: picked,
       mode: 'exam',
       timeLimit: n * 60,
