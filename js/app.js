@@ -247,12 +247,16 @@
     app.innerHTML = html;
     const input = document.getElementById('searchInput');
     input.focus();
+    // курсорды мәтіннің соңына қою
+    input.value = input.value;
     input.addEventListener('input', function () {
       const v = input.value.trim();
-      location.replace('#/search/' + encodeURIComponent(v));
+      // URL-ді хэшті ауыстырусыз жаңартамыз: hashchange іске қосылмайды,
+      // сондықтан бет қайта салынбайды әрі іздеу өрісінің фокусы жоғалмайды.
+      try { history.replaceState(null, '', '#/search/' + encodeURIComponent(v)); } catch (e) {}
       renderSearchResults(v);
     });
-    renderSearchResults(qstr || '');
+    renderSearchResults((qstr || '').trim());
   }
 
   function renderSearchResults(qstr) {
